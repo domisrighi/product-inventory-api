@@ -68,4 +68,14 @@ public class ProductService implements IService<ProductDTO> {
     public boolean partialUpdate(ProductDTO productDTO) {
         throw new UnsupportedOperationException("Unimplemented method 'partialUpdate'");
     }
+
+    public List<ProductDTO> findAllByOrderByNameAsc() {
+        List<Product> products = productRepository.findAllByOrderByNameAsc();
+        return productMapper.toDTO(products);
+    }
+
+    public List<ProductDTO> findAllByOrderByNameDesc() {
+        List<Product> products = productRepository.findAllByOrderByNameDesc();
+        return productMapper.toDTO(products);
+    }
 }

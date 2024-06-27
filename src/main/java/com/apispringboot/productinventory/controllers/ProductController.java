@@ -190,6 +190,43 @@ public class ProductController {
         return ResponseEntity.notFound().build();
 }
 
+@Operation(summary = "Get products ordered by name ascending", description = "Gets products ordered by name in ascending order.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Products found!", content = {
+                    @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = ProductDTO.class))) }),
+            @ApiResponse(responseCode = "404", description = "No products found.")
+    })
+    @GetMapping("/orderAsc")
+    public ResponseEntity<List<EntityModel<ProductDTO>>> getProductsByOrderAsc() {
+        List<ProductDTO> products = productService.findAllByOrderByNameAsc();
+        if (!products.isEmpty()) {
+            List<EntityModel<ProductDTO>> productsWithLinks = products.stream()
+                    .map(this::addHateoasLinks)
+                    .collect(Collectors.toList());
+            return ResponseEntity.ok(productsWithLinks);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    @Operation(summary = "Get products ordered by name descending", description = "Gets products ordered by name in descending order.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Products found!", content = {
+                    @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = ProductDTO.class))) }),
+            @ApiResponse(responseCode = "404", description = "No products found.")
+    })
+    @GetMapping("/orderDesc")
+    public ResponseEntity<List<EntityModel<ProductDTO>>> getProductsByOrderDesc() {
+        List<ProductDTO> products = productService.findAllByOrderByNameDesc();
+        if (!products.isEmpty()) {
+            List<EntityModel<ProductDTO>> productsWithLinks = products.stream()
+                    .map(this::addHateoasLinks)
+                    .collect(Collectors.toList());
+            return ResponseEntity.ok(productsWithLinks);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
 
     private EntityModel<ProductDTO> addHateoasLinks(ProductDTO productDTO) {
         return EntityModel.of(productDTO,
